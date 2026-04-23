@@ -56,7 +56,7 @@ class User(AbstractUser, PermissionsMixin):
             MaxLengthValidator(limit_value=13)
         ]
     )
-    is_active = models.BooleanField(_("is active"), default=True)
+    is_active = models.BooleanField(_("is active"), default=False)
     # a admin user; non super-user
     is_staff = models.BooleanField(_("staff"), default=False)
     is_first_login = models.BooleanField(_("staff"), default=True)
@@ -86,6 +86,12 @@ class User(AbstractUser, PermissionsMixin):
         "Does the user have permissions to view the app `app_label`?"
         # Simplest possible answer: Yes, always
         return True
+        
+    # class Meta:
+    #     db_table = "users"
+    #     verbose_name = "User"
+    #     verbose_name_plural = "Users"
+    #     ordering = ["-created_on"]
     
 
 
