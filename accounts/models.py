@@ -44,6 +44,16 @@ class UserManager(BaseUserManager):
         return user
 
 class User(AbstractUser, PermissionsMixin):
+    OWNER='OWNER'
+    CHECKER='CHECKER'
+    USER='USER'
+    ADMIN='ADMIN'
+    USER_TYPES_CHOICES=[ 
+    (OWNER, 'Owner'),
+    (CHECKER,'Checker'),
+    (USER,'User'),
+    (ADMIN,'Admin')
+    ]
 
     username=None
     first_name=None
@@ -57,6 +67,9 @@ class User(AbstractUser, PermissionsMixin):
         ]
     )
     is_active = models.BooleanField(_("is active"), default=False)
+    user_type = models.CharField(
+        _("user type"), max_length=50, choices=USER_TYPES_CHOICES, default=USER
+    )
     # a admin user; non super-user
     is_staff = models.BooleanField(_("staff"), default=False)
     is_first_login = models.BooleanField(_("staff"), default=True)
