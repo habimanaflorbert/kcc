@@ -1,7 +1,10 @@
 from rest_framework import serializers
-from accounts.models import User
+from accounts.models import User, VerificationCode
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 import datetime
+from utils.gencode import random_with_N_digits
+from utils.sendemail import send_email
+
 class UserSerializer(serializers.ModelSerializer):
     re_enter_password=serializers.CharField(write_only=True)
     class Meta:
@@ -27,6 +30,11 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self,validated_data):
         re_enter_password=validated_data.pop("re_enter_password")
         user=User.objects.create_user(**validated_data)
+        ver=VerificationCode.objects.create(
+            user=user,
+            code=random_with_N_digits(4),
+        )
+        send_email(user.full_name,ver.code,"Reset Account verification code",user.email)
         return user
         
 
